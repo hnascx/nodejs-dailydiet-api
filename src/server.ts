@@ -1,9 +1,12 @@
 import fastify from 'fastify'
+import { knex } from './database'
 
 const app = fastify()
 
-app.get('/meals', () => {
-  return 'Daily Diet API'
+app.get('/meals', async () => {
+  const tables = await knex('sqlite_schema').select('*')
+
+  return tables
 })
 
 app

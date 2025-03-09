@@ -4,6 +4,22 @@ import { z } from 'zod'
 import { randomUUID } from 'node:crypto'
 
 export async function usersRoutes(app: FastifyInstance) {
+  // Create a new user
+  app.post('/', async (request, reply) => {
+    const createUserBodySchema = z.object({
+      name: z.string(),
+    })
+
+    const { name } = createUserBodySchema.parse(request.body)
+
+    await knex('users').insert({
+      id: randomUUID(),
+      name,
+    })
+
+    return reply.status(201).send()
+  })
+
   // List all users
   app.get('/', async () => {
     const users = await knex('users').select()
@@ -22,22 +38,6 @@ export async function usersRoutes(app: FastifyInstance) {
     const user = await knex('users').where({ id }).first()
 
     return { user }
-  })
-
-  // Create a new user
-  app.post('/', async (request, reply) => {
-    const createUserBodySchema = z.object({
-      name: z.string(),
-    })
-
-    const { name } = createUserBodySchema.parse(request.body)
-
-    await knex('users').insert({
-      id: randomUUID(),
-      name,
-    })
-
-    return reply.status(201).send()
   })
 
   // Update a specific user by id

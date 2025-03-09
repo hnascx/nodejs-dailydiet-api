@@ -6,6 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     table.text('title').notNullable()
     table.text('description').notNullable()
     table.timestamp('created_at').defaultTo(knex.fn.now()).notNullable()
+    table.timestamp('updated_at').defaultTo(knex.fn.now()).notNullable()
     table.boolean('is_on_the_diet').defaultTo(false).notNullable()
 
     // Foreign key reference

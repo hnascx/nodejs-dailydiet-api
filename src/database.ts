@@ -15,3 +15,5 @@ export const config: Knex.Config = {
 }
 
 export const knex = setupKnex(config)
+
+knex.raw('PRAGMA foreign_keys = ON')

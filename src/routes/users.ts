@@ -37,6 +37,10 @@ export async function usersRoutes(app: FastifyInstance) {
 
     const user = await knex('users').where({ id }).first()
 
+    if (!user) {
+      return { message: 'User not found' }
+    }
+
     return { user }
   })
 
@@ -55,7 +59,7 @@ export async function usersRoutes(app: FastifyInstance) {
 
     const updatedDataFromUser = await knex('users')
       .where({ id })
-      .update({ name })
+      .update({ name, updated_at: knex.fn.now() })
 
     if (!updatedDataFromUser) {
       return reply.status(404).send({ message: 'User not found' })

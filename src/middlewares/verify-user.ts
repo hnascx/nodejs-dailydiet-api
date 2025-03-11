@@ -11,7 +11,7 @@ export async function verifyUser(request: FastifyRequest, reply: FastifyReply) {
   const user = await knex('users').where('id', userId).first()
 
   if (!user) {
-    return reply.status(401).send({ message: 'User not found' })
+    return reply.status(404).send({ message: 'User not found' })
   }
 
   request.user = { id: userId }

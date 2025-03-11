@@ -5,7 +5,9 @@ import { knex } from '../database'
 import { verifyUser } from '../middlewares/verify-user'
 
 export async function mealsRoutes(app: FastifyInstance) {
-  app.post('/', { preHandler: verifyUser }, async (request, reply) => {
+  app.addHook('preHandler', verifyUser)
+
+  app.post('/', async (request, reply) => {
     const createMealBodySchema = z.object({
       title: z.string(),
       description: z.string(),
@@ -29,7 +31,7 @@ export async function mealsRoutes(app: FastifyInstance) {
     return reply.status(201).send()
   })
 
-  app.get('/', { preHandler: verifyUser }, async (request) => {
+  app.get('/', async (request) => {
     const userId = request.user.id
 
     const meals = (await knex('meals').where('user_id', userId).select()).map(
@@ -42,7 +44,7 @@ export async function mealsRoutes(app: FastifyInstance) {
     return { meals }
   })
 
-  app.get('/:id', { preHandler: verifyUser }, async (request, reply) => {
+  app.get('/:id', async (request, reply) => {
     const getMealByIdParamsSchema = z.object({
       id: z.string().uuid(),
     })
@@ -70,7 +72,7 @@ export async function mealsRoutes(app: FastifyInstance) {
     }
   })
 
-  app.get('/metrics', { preHandler: verifyUser }, async (request) => {
+  app.get('/metrics', async (request) => {
     const userId = request.user.id
 
     // All meals from the user ordered by created_at
@@ -113,7 +115,7 @@ export async function mealsRoutes(app: FastifyInstance) {
     }
   })
 
-  app.put('/:id', { preHandler: verifyUser }, async (request, reply) => {
+  app.put('/:id', async (request, reply) => {
     const updateMealParamsSchema = z.object({
       id: z.string().uuid(),
     })
@@ -152,7 +154,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
   app.patch(
     '/:id/is-on-the-diet',
-    { preHandler: verifyUser },
+
     async (request, reply) => {
       const isMealOnTheDietParamsSchema = z.object({
         id: z.string().uuid(),
@@ -184,7 +186,7 @@ export async function mealsRoutes(app: FastifyInstance) {
     },
   )
 
-  app.delete('/:id', { preHandler: verifyUser }, async (request, reply) => {
+  app.delete('/:id', async (request, reply) => {
     const deleteMealParamsSchema = z.object({
       id: z.string().uuid(),
     })

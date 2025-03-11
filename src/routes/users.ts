@@ -11,13 +11,14 @@ export async function usersRoutes(app: FastifyInstance) {
     })
 
     const { name } = createUserBodySchema.parse(request.body)
+    const id = randomUUID()
 
     await knex('users').insert({
-      id: randomUUID(),
+      id,
       name,
     })
 
-    return reply.status(201).send()
+    return reply.status(201).send({ id, name })
   })
 
   // List all users

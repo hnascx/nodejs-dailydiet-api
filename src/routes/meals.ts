@@ -70,6 +70,49 @@ export async function mealsRoutes(app: FastifyInstance) {
     }
   })
 
+  app.get('/metrics', { preHandler: verifyUser }, async (request) => {
+    const userId = request.user.id
+
+    // All meals from the user ordered by created_at
+    const meals = await knex('meals')
+      .where('user_id', userId)
+      .orderBy('created_at', 'asc')
+      .select()
+
+    // Convertion to boolean after query be solved
+    const formattedMeals = meals.map((meal) => ({
+      ...meal,
+      is_on_the_diet: Boolean(meal.is_on_the_diet),
+    }))
+
+    // Calculate the metrics
+    const totalMeals = formattedMeals.length
+    const mealsOnDiet = formattedMeals.filter(
+      (meal) => meal.is_on_the_diet,
+    ).length // Returns an array with the meals on the diet where is_on_the_diet is true
+    const mealsOffDiet = totalMeals - mealsOnDiet
+
+    // Calculate the best sequence of meals on the diet
+    let bestStreak = 0
+    let currentStreak = 0
+
+    for (const meal of meals) {
+      if (meal.is_on_the_diet) {
+        currentStreak++
+        bestStreak = Math.max(bestStreak, currentStreak)
+      } else {
+        currentStreak = 0
+      }
+    }
+
+    return {
+      totalMeals,
+      mealsOnDiet,
+      mealsOffDiet,
+      bestStreak,
+    }
+  })
+
   app.put('/:id', { preHandler: verifyUser }, async (request, reply) => {
     const updateMealParamsSchema = z.object({
       id: z.string().uuid(),

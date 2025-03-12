@@ -2,3 +2,4 @@
 /package-lock.json
 /db/app.db
 .env
+.env.test

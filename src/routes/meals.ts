@@ -19,16 +19,19 @@ export async function mealsRoutes(app: FastifyInstance) {
     )
 
     const userId = request.user.id
+    const id = randomUUID()
 
     await knex('meals').insert({
-      id: randomUUID(),
+      id,
       title,
       description,
       is_on_the_diet: isOnTheDiet,
       user_id: userId,
     })
 
-    return reply.status(201).send()
+    return reply
+      .status(201)
+      .send({ id, title, description, isOnTheDiet, userId })
   })
 
   app.get('/', async (request) => {

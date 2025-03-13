@@ -99,7 +99,34 @@ describe('Meals routes', () => {
     expect(getMealByIdResponse.body.meal.id).toBe(mealId)
   })
 
-  it('should be able to get the meal metrics of a user', async () => {})
+  it('should be able to get the meal metrics of a user', async () => {
+    const createdUserResponse = await request(app.server)
+      .post('/users')
+      .send({ name: 'John Doe' })
+      .expect(201)
+
+    const userId = createdUserResponse.body.id
+
+    await request(app.server)
+      .post('/meals')
+      .send({
+        title: 'Test meal',
+        description: 'Test description',
+        isOnTheDiet: true,
+      })
+      .set('userId', userId)
+      .expect(201)
+
+    const getMealMetricsResponse = await request(app.server)
+      .get('/meals/metrics')
+      .set('userId', userId)
+      .expect(200)
+
+    expect(getMealMetricsResponse.body).toHaveProperty('totalMeals', 1)
+    expect(getMealMetricsResponse.body).toHaveProperty('mealsOnDiet', 1)
+    expect(getMealMetricsResponse.body).toHaveProperty('mealsOffDiet', 0)
+    expect(getMealMetricsResponse.body).toHaveProperty('bestStreak', 1)
+  })
 
   it('should be able to update a meal', async () => {
     const createdUserResponse = await request(app.server)

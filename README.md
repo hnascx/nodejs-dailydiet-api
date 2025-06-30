@@ -1,26 +1,43 @@
-### Regras da aplicação
+# API for Daily Diet Tracking
 
-- [x] Deve ser possível criar um usuário
-- [x] Deve ser possível identificar o usuário entre as requisições
-- [x] Deve ser possível registrar uma refeição feita, com as seguintes informações:
-    
-    *As refeições devem ser relacionadas a um usuário.*
-    
-    - Título
-    - Descrição
-    - Data e Hora
-    - Está dentro ou não da dieta
+### Application Rules
 
-- [x] Deve ser possível editar uma refeição, podendo alterar todos os dados acima
-- [x] Deve ser possível apagar uma refeição
-- [x] Deve ser possível listar todas as refeições de um usuário
-- [x] Deve ser possível visualizar uma única refeição
+- It must be possible to create a user.  
+- Users must be identifiable across requests.  
+- It must be possible to log a meal with the following details:  
+  *Meals should be associated with a user.*  
+  - **Title**  
+  - **Description**  
+  - **Date and Time**  
+  - **Whether it adheres to the diet or not**  
 
-- [x] Deve ser possível recuperar as métricas de um usuário
+- It must be possible to edit a meal, with all the above data being modifiable.  
+- It must be possible to delete a meal.  
+- It must be possible to list all meals for a user.  
+- It must be possible to view a single meal.  
 
-    - Quantidade total de refeições registradas
-    - Quantidade total de refeições dentro da dieta
-    - Quantidade total de refeições fora da dieta
-    - Melhor sequência de refeições dentro da dieta
+- It must be possible to retrieve user metrics:  
+  - **Total number of meals logged**  
+  - **Total number of meals adhering to the diet**  
+  - **Total number of meals not adhering to the diet**  
+  - **Best streak of meals adhering to the diet**  
 
-- [x] O usuário só pode visualizar, editar e apagar as refeições o qual ele criou
+- Users can only view, edit, and delete meals they have created.  
+
+### Technologies Used
+
+The application was developed using:  
+- **Fastify** as the framework  
+- **Knex.js** as the query builder  
+- **SQLite** as the database  
+- **Vitest** for testing  
+- **Zod** for validating the data sent in requests  
+
+### Installation
+`npm i`
+
+### Running
+`npm run dev`
+
+### Testing
+`npm run test`

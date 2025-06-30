@@ -1,4 +1,4 @@
-# API for Daily Diet Tracking
+# Node.js Daily Diet API
 
 ### Application Rules
 
